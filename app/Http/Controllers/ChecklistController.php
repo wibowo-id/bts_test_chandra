@@ -150,9 +150,31 @@ class ChecklistController extends Controller
         ]);
     }
 
-    public function RenameChecklistItemDetail()
+    public function RenameChecklistItemDetail(Request $request, $checklistId, $id)
     {
-        return "";
+        $this->validate($request, [
+            'itemName' => 'required|string',
+        ]);
+
+        try {
+            $model = ChecklistItem::where('id', '=', $id)->where('checklist_id', '=', $checklistId)->update([
+                'itemName' => $request->input('itemName')
+            ]);
+
+            $code = 200;
+            $message = "Data berhasil di edit";
+        } catch (\Exception $e) {
+            $code = 500;
+            $message = $e->getMessage();
+        }
+
+        $data = array(
+            'code'=> $code,
+            'success'=> $code == 200 ? true : false,
+            'message'=> $message
+        );
+
+        return response()->json($data);
     }
 
 }
