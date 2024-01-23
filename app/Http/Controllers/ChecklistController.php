@@ -105,7 +105,7 @@ class ChecklistController extends Controller
 
     public function GetChecklistItemDetail($checklistId, $id)
     {
-        $datas = ChecklistItem::where('id', '=', $id);
+        $datas = ChecklistItem::where('id', '=', $id)->where('checklist_id', '=', $checklistId)->get();
 
         return response()->json([
            'code' => 200,
