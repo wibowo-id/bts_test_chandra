@@ -140,9 +140,14 @@ class ChecklistController extends Controller
         return response()->json($data);
     }
 
-    public function DeleteChecklistItem()
+    public function DeleteChecklistItem($checklistId, $id)
     {
-        return "";
+        ChecklistItem::where('id', '=', $id)->where('checklist_id', '=', $checklistId)->delete();
+
+        return response()->json([
+           'code' => 200,
+           'message' => 'berhasil hapus data'
+        ]);
     }
 
     public function RenameChecklistItemDetail()
