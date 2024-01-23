@@ -2,7 +2,6 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-use App\Http\Controllers\AuthController;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -18,15 +17,28 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'api'], function () use ($router) {
-    $router->get('/login', AuthController::Login);
-    $router->group(['middleware' => 'auth'], function () use ($router) {
-        $router->get('/', function () {
-            // Uses Auth Middleware
-        });
+$router->group([
+    'prefix' => 'api'
+], function () use ($router) {
+    $router->post('/login', 'AuthController@Login');
+    $router->post('/register', 'AuthController@Register');
 
-        $router->get('user/profile', function () {
-            // Uses Auth Middleware
-        });
+    $router->group([
+        'prefix' => '/checklist'
+    ], function () use ($router) {
+        $router->get('/', 'ChecklistController@GetAllChecklist');
+        $router->post('/', 'ChecklistController@CreateChecklist');
+        $router->delete('/{id}', 'ChecklistController@DeleteChecklist');
+    });
+
+    $router->group([
+        'prefix' => '/checklist/{checklistId}/item'
+    ], function () use ($router) {
+        $router->get('/', 'ChecklistController@GetAllChecklistItem');
+        $router->post('/', 'ChecklistController@CreateChecklistItem');
+        $router->get('/{id}', 'ChecklistController@GetChecklistItemDetail');
+        $router->put('/{id}', 'ChecklistController@UpdateChecklistItemDetail');
+        $router->delete('/{id}', 'ChecklistController@DeleteChecklistItem');
+        $router->put('/rename/{id}', 'ChecklistController@RenameChecklistItemDetail');
     });
 });
